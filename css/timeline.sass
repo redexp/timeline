@@ -1,0 +1,59 @@
+@import "helpers"
+
+$backColor: #1b1b1b
+$fontColor: #dddddd
+
+$frameWidth: 36px
+$halfFrame:  $frameWidth / 2
+
+.timeline-wrapper
+    background-color: $backColor
+    width:  600px
+    height: 400px
+    position: relative
+    overflow: hidden
+
+.timeline
+    @include stretch($halfFrame, $halfFrame)
+
+    .frames
+        @include stretch
+
+        li
+            @include stretch-v
+            width:  $frameWidth
+            margin-left: -$halfFrame
+
+            .line
+                @include stretch-v
+                background-color: $fontColor
+                left:   50%
+                width:  1px
+
+            .time
+                position: absolute
+                background-color: $backColor
+                color:  $fontColor
+                bottom: 0
+                width: 100%
+                text-align: center
+                font-size: 12px
+
+        .pointer
+            z-index: 100
+
+            .line
+                background-color: red
+
+    .tags-lines
+        @include stretch
+
+        li
+            position: relative
+            height: 30px
+
+            .tag
+                @include stretch-v
+                width: 60px
+                background-color: #ccc
+                border-radius: 2px
