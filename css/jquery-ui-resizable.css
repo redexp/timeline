@@ -1,0 +1,11 @@
+.ui-resizable-handle {
+  display: block;
+  font-size: 0.1px;
+  position: absolute; }
+
+.ui-resizable-e {
+  cursor: e-resize;
+  height: 100%;
+  right: -5px;
+  top: 0px;
+  width: 7px; }
