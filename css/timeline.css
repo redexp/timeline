@@ -45,7 +45,7 @@
         text-align: center;
         font-size: 12px; }
     .timeline .frames .pointer {
-      z-index: 100; }
+      z-index: 1000; }
       .timeline .frames .pointer .line {
         background-color: red; }
   .timeline .tags-lines li {
