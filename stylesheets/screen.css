@@ -405,15 +405,6 @@ ol {
   padding-left: 1.35em;
 }
 
-ul {
-  margin: .7em 0;
-  padding-left: 1.35em;
-}
-
-ul li {
-  padding-left: 10px;
-  background: transparent url(../images/chevron.png) left 6px no-repeat;
-}
 
 blockquote {
   font-family: 'Open Sans', Myriad, Calibri, sans-serif;
