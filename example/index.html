@@ -26,14 +26,16 @@
 
             // native style
             var timeline = new Timeline('#test1', options);
-            timeline.tick();
+            timeline.goToNextSecond();
+            timeline.goToPrevSecond();
             timeline.goTo(72);
             timeline.addTag({title: 'Five', line: 2, time: 80, length: 20});
             console.log(JSON.stringify(timeline.getTags()));
 
             // jQuery style
             var $timeline = $('#test2').timeline(options);
-            $timeline.timeline('tick');
+            $timeline.timeline('goToNextSecond');
+            $timeline.timeline('goToPrevSecond');
             $timeline.timeline('goTo', 72);
             $timeline.timeline('addTag', {title: 'Five', line: 2, time: 80, length: 20});
             console.log(JSON.stringify($timeline.timeline('getTags')));
