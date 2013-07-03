@@ -110,14 +110,14 @@
 
         if( helperLine == curTag.data('line') ) {
             helper.hide();
-            return;
         }
-
-        helper
-            .css(curTag.css(['left', 'width']))
-            .css('top', 30 * helperLine + 'px')
-            .show()
-        ;
+        else {
+            helper
+                .css(curTag.css(['left', 'width']))
+                .css('top', 30 * helperLine + 'px')
+                .show()
+            ;
+        }
 
         if( helperLine > linesCount && ! fakeLine ) {
             tagsLines.append('<li>');
