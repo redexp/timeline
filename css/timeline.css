@@ -34,7 +34,8 @@
         bottom: 0;
         background-color: #dddddd;
         left: 50%;
-        width: 1px; }
+        width: 1px;
+        margin-left: -1px; }
       .timeline .frames li .time {
         position: absolute;
         background-color: #1b1b1b;
