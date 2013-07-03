@@ -26,8 +26,12 @@
 
         root.data('timeline', this);
     };
-    Timeline.prototype.tick = function(){
+    Timeline.prototype.goToNextSecond = function(){
         this.cont.find('.pointer').css('left', '+=' + this.cont.data('px/sec'));
+        return this;
+    };
+    Timeline.prototype.goToPrevSecond = function(){
+        this.cont.find('.pointer').css('left', '-=' + this.cont.data('px/sec'));
         return this;
     };
     Timeline.prototype.goTo = function(sec){
@@ -53,6 +57,9 @@
         });
 
         return arr;
+    };
+    Timeline.prototype.getRootNode = function(){
+        return this.cont;
     };
 
     $.fn.timeline = function(ops){
