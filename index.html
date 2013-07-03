@@ -9,12 +9,30 @@
     <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
     <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
 
+    <link rel="stylesheet" type="text/css" href="css/timeline.css"/>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+
+    <script type="text/javascript" src="js/timeline.js"></script>
+
     <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            $('#main_content').headsmart()
+        jQuery(function($){
+            $('#main_content').headsmart();
+
+            $('#timeline').timeline({
+                duration: 60 * 2 + 25,
+                framesNumber: 10,
+                width: 470,
+                tags: [
+                    {title: 'One', line: 0, time: 0, length: 15},
+                    {title: 'Two', line: 0, time: 30, length: 15},
+                    {title: 'Three', line: 1, time: 5, length: 20},
+                    {title: 'Four', line: 1, time: 40, length: 20}
+                ]
+            }).timeline('goTo', 78);
         })
     </script>
     <title>Timeline by redexp</title>
