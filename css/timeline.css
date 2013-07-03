@@ -1,0 +1,67 @@
+.ui-resizable-handle {
+  display: block;
+  font-size: 0.1px;
+  position: absolute; }
+
+.ui-resizable-e {
+  cursor: e-resize;
+  height: 100%;
+  right: -5px;
+  top: 0px;
+  width: 7px; }
+
+.timeline {
+  background-color: #1b1b1b;
+  width: 600px;
+  position: relative;
+  overflow: hidden;
+  padding: 0 18px 12px; }
+  .timeline .frames {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 0;
+    bottom: 0; }
+    .timeline .frames li {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 36px;
+      margin-left: -18px; }
+      .timeline .frames li .line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background-color: #dddddd;
+        left: 50%;
+        width: 1px;
+        margin-left: -1px; }
+      .timeline .frames li .time {
+        position: absolute;
+        background-color: #1b1b1b;
+        color: #dddddd;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 12px; }
+    .timeline .frames .pointer {
+      z-index: 100; }
+      .timeline .frames .pointer .line {
+        background-color: red; }
+  .timeline .tags-lines li {
+    position: relative;
+    height: 30px; }
+    .timeline .tags-lines li .tag {
+      position: absolute;
+      top: 0;
+      height: 26px;
+      width: 60px;
+      margin-top: 2px;
+      border-radius: 2px;
+      background-color: #cccccc;
+      z-index: 100; }
+      .timeline .tags-lines li .tag.helper {
+        opacity: 0.5; }
+      .timeline .tags-lines li .tag span {
+        display: block;
+        margin: 2px; }

@@ -1,0 +1,69 @@
+@import "helpers"
+@import "jquery-ui-resizable"
+
+$backColor: #1b1b1b
+$fontColor: #dddddd
+
+$frameWidth: 36px
+$halfFrame:  $frameWidth / 2
+
+.timeline
+    background-color: $backColor
+    width:  600px
+    position: relative
+    overflow: hidden
+    padding: 0 $halfFrame 12px
+
+    .frames
+        @include stretch($halfFrame, $halfFrame)
+
+        li
+            @include stretch-v
+            width:  $frameWidth
+            margin-left: -$halfFrame
+
+            .line
+                @include stretch-v
+                background-color: $fontColor
+                left:   50%
+                width:  1px
+                margin-left: -1px
+
+            .time
+                position: absolute
+                background-color: $backColor
+                color:  $fontColor
+                bottom: 0
+                width: 100%
+                text-align: center
+                font-size: 12px
+
+        .pointer
+            z-index: 100
+
+            .line
+                background-color: red
+
+    .tags-lines
+        $lineHeight: 30px
+
+        li
+            position: relative
+            height: $lineHeight
+
+            .tag
+                position: absolute
+                top: 0
+                height: $lineHeight - 4px
+                width:  60px
+                margin-top: 2px
+                border-radius: 2px
+                background-color: #ccc
+                z-index: 100
+
+                &.helper
+                    opacity: 0.5
+
+                span
+                    display: block
+                    margin: 2px

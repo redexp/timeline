@@ -1,0 +1,16 @@
+@mixin stretch($left: 0, $right: 0, $top: 0, $bottom: 0)
+    position: absolute
+    left:   $left
+    right:  $right
+    top:    $top
+    bottom: $bottom
+
+@mixin stretch-h($left: 0, $right: 0)
+    position: absolute
+    left:   $left
+    right:  $right
+
+@mixin stretch-v($top: 0, $bottom: 0)
+    position: absolute
+    top:    $top
+    bottom: $bottom
