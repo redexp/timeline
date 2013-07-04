@@ -17,10 +17,10 @@
                 framesNumber: 12,
                 width: 600,
                 tags: [
-                    {title: 'One', line: 0, time: 0, length: 15},
-                    {title: 'Two', line: 0, time: 30, length: 15},
-                    {title: 'Three', line: 1, time: 5, length: 20},
-                    {title: 'Four', line: 1, time: 40, length: 20}
+                    {title: 'One', line: 0, length: 15},
+                    {title: 'Two', start: 30, length: 15},
+                    {title: 'Three', line: 1, start: 5, length: 20},
+                    {title: 'Four', line: 1, start: 40, length: 20}
                 ]
             };
 
@@ -29,7 +29,8 @@
             timeline.goToNextSecond();
             timeline.goToPrevSecond();
             timeline.goTo(72);
-            timeline.addTag({title: 'Five', line: 2, time: 80, length: 20});
+            timeline.addTag({title: 'Five', line: 2, start: 80, length: 20});
+            timeline.addTag({title: 'Six', length: 20});
             console.log(JSON.stringify(timeline.getTags()));
 
             // jQuery style
@@ -37,7 +38,8 @@
             $timeline.timeline('goToNextSecond');
             $timeline.timeline('goToPrevSecond');
             $timeline.timeline('goTo', 72);
-            $timeline.timeline('addTag', {title: 'Five', line: 2, time: 80, length: 20});
+            $timeline.timeline('addTag', {title: 'Five', line: 2, start: 80, length: 20});
+            $timeline.timeline('addTag', {title: 'Six', length: 20});
             console.log(JSON.stringify($timeline.timeline('getTags')));
         });
     </script>
