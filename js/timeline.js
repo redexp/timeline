@@ -146,12 +146,14 @@
     }
 
     function addTag(cont, tag) {
+        if( typeof tag.start === 'undefined' ) tag.start = 0;
+
         var lines = cont.find('.tags-lines'),
             pxSec = cont.data('px/sec');
 
         var node = cont.data('tagTpl').clone()
             .css({
-                left:  tag.time * pxSec + 'px',
+                left:  tag.start * pxSec + 'px',
                 width: tag.length * pxSec + 'px'
             })
         ;

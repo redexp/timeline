@@ -37,8 +37,8 @@ $('.timeline').timeline('goTo', 75);
 * width - Width of timeline
 * tags - Array of tags option objects. Parameters described below
   * title - Title of tag
-  * line - Line on which should be placed tag
-  * time - Start time in seconds
+  * line - Line on which should be placed tag. If not defined then it will be placed on free line
+  * start - Start time in seconds. Default to 0
   * length - Length in seconds
 
 ## Methods
