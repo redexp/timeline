@@ -150,11 +150,24 @@
             pxSec = cont.data('px/sec');
 
         var node = cont.data('tagTpl').clone()
-            .data('line', li.index())
             .css({
                 left:  tag.time * pxSec + 'px',
                 width: tag.length * pxSec + 'px'
             })
+        ;
+        node.find('.title').html(tag.title);
+
+        if( 'line' in tag === false )  {
+            tag.line = getTagFreeLine(node, lines.find('.tag'));
+        }
+
+        for(var i = lines.find('li').length; i <= tag.line; i++) {
+            lines.append('<li>');
+        }
+
+        node
+            .appendTo( lines.find('li').eq(tag.line) )
+            .data('line', tag.line)
             .draggable({
                 containment: '.tags-lines',
                 axis:        "x",
@@ -170,18 +183,7 @@
                 resize:      onDrag,
                 stop:        onStop
             })
-            .find('.title').html(tag.title)
         ;
-
-        if( 'line' in tag === false )  {
-            tag.line = getTagFreeLine(node, lines.find('.tag'));
-        }
-
-        for(var i = lines.find('li').length; i <= tag.line; i++) {
-            lines.append('<li>');
-        }
-
-        node.appendTo( lines.find('li').eq(tag.line) );
     }
 
     var getTagFreeLine = (function(){
@@ -218,8 +220,10 @@
         })();
 
         return function(tag, list){
+            if( list.length === 0 ) return 0;
+
             dummy
-                .appendTo(tag.closest('ul').children().first())
+                .appendTo(list.eq(0).closest('ul').children().first())
                 .css(tag.css(['left', 'width']))
                 .css('top', '0px')
             ;
