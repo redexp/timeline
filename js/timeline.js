@@ -149,14 +149,7 @@
         var lines = cont.find('.tags-lines'),
             pxSec = cont.data('px/sec');
 
-        for(var i = lines.find('li').length; i <= tag.line; i++) {
-            lines.append('<li>');
-        }
-
-        var li = lines.find('li').eq(tag.line);
-
-        cont.data('tagTpl').clone()
-            .appendTo(li)
+        var node = cont.data('tagTpl').clone()
             .data('line', li.index())
             .css({
                 left:  tag.time * pxSec + 'px',
@@ -179,6 +172,16 @@
             })
             .find('.title').html(tag.title)
         ;
+
+        if( 'line' in tag === false )  {
+            tag.line = getTagFreeLine(node, lines.find('.tag'));
+        }
+
+        for(var i = lines.find('li').length; i <= tag.line; i++) {
+            lines.append('<li>');
+        }
+
+        node.appendTo( lines.find('li').eq(tag.line) );
     }
 
     var getTagFreeLine = (function(){
