@@ -1,66 +1,187 @@
 (function($){
 
+    //====================== Timeline class ================================
+
     window.Timeline = function(cont, ops) {
         var root = $(cont);
 
-        this.cont = root;
+        this.cont      = root;
+        this.duration  = ops.duration;
+        this['px/sec'] = ops.width / ops.duration;
+        this.tags      = [];
+        this.tagTpl    = root.find('.tag').detach();
+        this.frameTpl  = root.find('.frame').detach();
+        this.pointer   = root.find('.pointer');
+        this.currentSecond = 1;
 
-        root
-            .css('width', ops.width + 'px')
-            .data({
-                'px/sec':   ops.width / ops.duration,
-                'tagTpl':   root.find('.tag').detach(),
-                'frameTpl': root.find('.frame').detach()
-            })
-        ;
+        root.css('width', ops.width + 'px');
 
-        resetFrames(root, ops);
+        this.resetFrames(ops.framesNumber);
+        this.goTo(0);
 
         if( ops.tags ) {
             for(var i = 0; i < ops.tags.length; i++) {
-                addTag(root, ops.tags[i]);
+                this.addTag(ops.tags[i]);
             }
         }
 
-        root.find('.pointer').css('left', '0px');
-
         root.data('timeline', this);
-    };
-    Timeline.prototype.goToNextSecond = function(){
-        this.cont.find('.pointer').css('left', '+=' + this.cont.data('px/sec'));
-        return this;
-    };
-    Timeline.prototype.goToPrevSecond = function(){
-        this.cont.find('.pointer').css('left', '-=' + this.cont.data('px/sec'));
-        return this;
-    };
-    Timeline.prototype.goTo = function(sec){
-        this.cont.find('.pointer').css('left', sec * this.cont.data('px/sec') + 'px');
-        return this;
-    };
-    Timeline.prototype.addTag = function(tag){
-        addTag(this.cont, tag);
-        return this;
-    };
-    Timeline.prototype.getTags = function(){
-        var arr   = [],
-            pxSec = this.cont.data('px/sec');
-
-        this.cont.find('.tag').each(function(){
-            var tag = $(this);
-            arr.push({
-                title:  tag.find('.title').text(),
-                line:   tag.data('line'),
-                time:   parseInt(tag.css('left'), 10) / pxSec,
-                length: parseInt(tag.css('width'), 10) / pxSec
-            })
-        });
-
-        return arr;
     };
     Timeline.prototype.getRootNode = function(){
         return this.cont;
     };
+    Timeline.prototype.goTo = function(sec){
+        if( this.currentSecond != sec ) {
+            this.pointer.css('left', sec * this['px/sec'] + 'px');
+            this.currentSecond = sec;
+        }
+        return this;
+    };
+    Timeline.prototype.goToNextSecond = function(){
+        this.goTo(this.currentSecond + 1);
+        return this;
+    };
+    Timeline.prototype.goToPrevSecond = function(){
+        this.goTo(this.currentSecond - 1);
+        return this;
+    };
+    Timeline.prototype.addTag = function(tag){
+        if( tag instanceof TimelineTag == false ) {
+            tag['px/sec'] = this['px/sec'];
+            tag.tpl = this.tagTpl.clone();
+            tag = new TimelineTag(tag);
+        }
+
+        tag.addTo(this);
+
+        this.tags.push(tag);
+
+        return this;
+    };
+    Timeline.prototype.getTags = function(){
+        return this.tags;
+    };
+    Timeline.prototype.resetFrames = function(framesNumber){
+        this.cont.find('.frame').remove();
+        if( ! framesNumber ) return;
+
+        var pxSec    = this['px/sec'],
+            frames   = this.cont.find('.frames'),
+            secFrame = this.duration / (framesNumber - 1);
+
+        secFrame = secFrame - secFrame % 5;
+
+        for(var i = 0; i <= this.duration; i += secFrame) {
+            this.frameTpl.clone()
+                .appendTo(frames)
+                .css('left', i * pxSec + 'px')
+                .find('.time').html(this.formatTime(i))
+            ;
+        }
+
+        if( this.duration % secFrame > 0 ) {
+            this.frameTpl.clone()
+                .appendTo(frames)
+                .css('left', this.duration * pxSec + 'px')
+            ;
+        }
+    };
+    Timeline.prototype.formatTime = function(seconds){
+        function pad(num, size) {
+            num = "" + num;
+            var s = "000000000" + num;
+            return num.length < size ? s.substr(s.length - size) : num;
+        }
+
+        var $m = Math.floor(seconds / 60),
+            $s = seconds % 60;
+        return pad($m, 2) + ':' + pad($s, 2);
+    };
+
+    //====================== TimelineTag class =============================
+
+    window.TimelineTag = function(ops){
+        this.title  = '';
+        this.start  = 0;
+        this.length = 1;
+        this.line   = null;
+        this['px/sec'] = ops['px/sec'];
+
+        var root = $(ops.tpl);
+        this.getRootNode = function(){
+            return root;
+        };
+
+        root.data('tag', this);
+
+        this
+            .setTitle(ops.title)
+            .setStart(ops.start   || this.start)
+            .setLength(ops.length || this.length)
+        ;
+    };
+    TimelineTag.prototype.addTo = function(timeline){
+        this.getRootNode().appendTo(
+            timeline.cont.find('.tags-lines li').first()
+        );
+
+        this.setLine(this.getFreeLine());
+
+        if( ! this.getRootNode().data('initDnD') ) {
+            this.getRootNode()
+                .draggable({
+                    containment: '.tags-lines',
+                    axis:        "x",
+                    zIndex:      1000,
+                    start:       onStart,
+                    drag:        onDrag,
+                    stop:        onStop
+                })
+                .resizable({
+                    containment: '.tags-lines',
+                    handles:     "e",
+                    start:       onStart,
+                    resize:      onDrag,
+                    stop:        onStop
+                })
+            ;
+            this.getRootNode().data('initDnD', true);
+        }
+    };
+    TimelineTag.prototype.setTitle = function(title){
+        this.getRootNode().find('.title').html(this.title = title);
+        return this;
+    };
+    TimelineTag.prototype.setStart = function(start){
+        this.getRootNode().css('left', (this.start = start) * this['px/sec'] + 'px');
+        this.setLine(this.getFreeLine());
+        return this;
+    };
+    TimelineTag.prototype.setLength = function(length){
+        this.getRootNode().css('width', (this.length = length) * this['px/sec'] + 'px');
+        this.setLine(this.getFreeLine());
+        return this;
+    };
+    TimelineTag.prototype.setLine = function(line){
+        if( this.line === line ) return this;
+
+        var lines = this.getRootNode().closest('.tags-lines');
+
+        for(var i = lines.find('li').length; i <= line; i++) {
+            lines.append('<li>');
+        }
+
+        this.getRootNode().appendTo( lines.find('li').eq(this.line = line) );
+
+        return this;
+    };
+    TimelineTag.prototype.getFreeLine = function(){
+        var lines = this.getRootNode().closest('.tags-lines');
+
+        return getTagFreeLine(this.getRootNode(), lines.find('.tag'));
+    };
+
+    //====================== jQuery plugin =================================
 
     $.fn.timeline = function(ops){
         if( typeof ops === 'string' ) {
@@ -88,6 +209,8 @@
         });
     };
 
+    //====================== Helpers =======================================
+
     var helper, helperLine, curTag, tagsList, tagsLines, linesCount, fakeLine;
 
     function onStart(e, ui){
@@ -106,9 +229,13 @@
     }
 
     function onDrag(){
+        var tag = curTag.data('tag');
+        tag.start  = parseInt(curTag.css('left'))  / tag['px/sec'];
+        tag.length = parseInt(curTag.css('width')) / tag['px/sec'];
+
         helperLine = getTagFreeLine(curTag, tagsList);
 
-        if( helperLine == curTag.data('line') ) {
+        if( helperLine == curTag.data('tag').line ) {
             helper.hide();
         }
         else {
@@ -130,62 +257,19 @@
     }
 
     function onStop(){
-        setTagToLine(curTag, helperLine);
+        curTag.data('tag').setLine(helperLine);
 
         helper.remove();
 
         tagsLines.find('li').not(':first').find('.tag').not(curTag).each(function(){
             var $this = $(this);
-            setTagToLine($this, getTagFreeLine($this, tagsList));
+            $this.data('tag').setLine( getTagFreeLine($this, tagsList) );
         });
 
         var lastLi = tagsLines.find('li').last();
         if( lastLi.children().length == 0 ) {
             lastLi.remove();
         }
-    }
-
-    function addTag(cont, tag) {
-        if( typeof tag.start === 'undefined' ) tag.start = 0;
-
-        var lines = cont.find('.tags-lines'),
-            pxSec = cont.data('px/sec');
-
-        var node = cont.data('tagTpl').clone()
-            .css({
-                left:  tag.start * pxSec + 'px',
-                width: tag.length * pxSec + 'px'
-            })
-        ;
-        node.find('.title').html(tag.title);
-
-        if( 'line' in tag === false )  {
-            tag.line = getTagFreeLine(node, lines.find('.tag'));
-        }
-
-        for(var i = lines.find('li').length; i <= tag.line; i++) {
-            lines.append('<li>');
-        }
-
-        node
-            .appendTo( lines.find('li').eq(tag.line) )
-            .data('line', tag.line)
-            .draggable({
-                containment: '.tags-lines',
-                axis:        "x",
-                zIndex:      1000,
-                start:       onStart,
-                drag:        onDrag,
-                stop:        onStop
-            })
-            .resizable({
-                containment: '.tags-lines',
-                handles:     "e",
-                start:       onStart,
-                resize:      onDrag,
-                stop:        onStop
-            })
-        ;
     }
 
     var getTagFreeLine = (function(){
@@ -235,58 +319,6 @@
             dummy.detach();
 
             return line;
-        }
-    })();
-
-    function setTagToLine(tag, line) {
-        if( line == tag.data('line') ) return;
-
-        var li = tag.closest('.tags-lines').find('li').eq(line);
-        tag
-            .appendTo(li)
-            .data('line', line)
-        ;
-    }
-
-    var resetFrames = (function(){
-        function pad(num, size) {
-            num = "" + num;
-            var s = "000000000" + num;
-            return num.length < size ? s.substr(s.length - size) : num;
-        }
-
-        function formatTime($value) {
-            var $m = Math.floor($value / 60),
-                $s = $value % 60;
-            return pad($m, 2) + ':' + pad($s, 2);
-        }
-
-        return function(cont, ops) {
-            var pxSec    = cont.data('px/sec'),
-                frames   = cont.find('.frames'),
-                frameTpl = cont.data('frameTpl'),
-                secFrame = ops.duration / (ops.framesNumber - 1);
-
-            frames.find('.frame').remove();
-
-            if( ops.framesNumber == 0 ) return;
-
-            secFrame = secFrame - secFrame % 5;
-
-            for(var i = 0; i <= ops.duration; i += secFrame) {
-                frameTpl.clone()
-                    .appendTo(frames)
-                    .css('left', i * pxSec + 'px')
-                    .find('.time').html(formatTime(i))
-                ;
-            }
-
-            if( ops.duration % secFrame > 0 ) {
-                frameTpl.clone()
-                    .appendTo(frames)
-                    .css('left', ops.duration * pxSec + 'px')
-                ;
-            }
         }
     })();
 

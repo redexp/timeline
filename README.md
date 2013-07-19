@@ -30,27 +30,41 @@ when with jQuery style you need to do that like this
 $('.timeline').timeline('goTo', 75);
 ```
 
-## Options
+## Timeline class
+
+### Options
 
 * duration - Length of video in seconds
 * framesNumber - Number of frames
 * width - Width of timeline
-* tags - Array of tags option objects. Parameters described below
-  * title - Title of tag
-  * line - Line on which should be placed tag. If not defined then it will be placed on free line
-  * start - Start time in seconds. Default to 0
-  * length - Length in seconds
+* tags - Array of TimelineTag class options
 
-## Methods
+### Methods
 
 * goToNextSecond() - Move pointer on one second forvard
 * goToPrevSecond() - Move pointer on one second backvard
 * goTo(seconds) - Move pointer to exac position on timeline
 * addTag(options) - Add tag to timeline
-* getTags() - Return array of tags option objects
+* getTags() - Return array of objects of TimelineTag class
 * getRootNode() - Return root element
 
 All methods except getters will returns timeline itself.
+
+## TimelineTag class
+
+### Options
+
+* title - Title of tag
+* start - Start time in seconds. Default to 0
+* length - Length in seconds
+
+### Methods
+
+* setTitle(string) - set title of tag
+* setStart(int) - set start of tag in seconds
+* setLength(int) - set length of tag in seconds
+* setLine(int) - set tag on line in timeline
+* getFreeLine() - get free line for this tag on timeline
 
 ## Templating
 

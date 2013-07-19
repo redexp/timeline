@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video player</title>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="../../css/reset.css"/>
+    <link rel="stylesheet" href="../../css/timeline.css"/>
+    <link rel="stylesheet" href="css/player.css"/>
+
+    <link rel="stylesheet" href="js/video-js/video-js.css">
+    <script type="text/javascript" src="js/video-js/video.js"></script>
+
+    <script type="text/javascript" src="../../js/vendor/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../../js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="../../js/timeline.js"></script>
+    <script type="text/javascript" src="js/player.js"></script>
+</head>
+<body>
+
+<div class="player">
+    <video id="video-player" class="video-js vjs-default-skin"></video>
+
+    <div class="timeline">
+        <ul class="frames unstyled">
+            <li class="pointer">
+                <div class="line"></div>
+            </li>
+            <li class="frame">
+                <div class="line"></div>
+                <div class="time"></div>
+            </li>
+        </ul>
+        <ul class="tags-lines unstyled">
+            <li>
+                <div class="tag">
+                    <span class="title"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="tag-buttons">
+        <button type="button" class="btn active">One</button>
+        <button type="button" class="btn">Two</button>
+        <button type="button" class="btn">Three</button>
+        <button type="button" class="btn">Four</button>
+    </div>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label">Start</label>
+            <div class="controls">
+                <input type="text" name="start" value="0"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Length</label>
+            <div class="controls">
+                <input type="text" name="length" value="15"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">OK</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
