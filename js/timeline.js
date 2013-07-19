@@ -13,10 +13,11 @@
         this.frameTpl  = root.find('.frame').detach();
         this.pointer   = root.find('.pointer');
         this.currentSecond = 1;
+        this.framesNumber  = ops.framesNumber || 0;
 
         root.css('width', ops.width + 'px');
 
-        this.resetFrames(ops.framesNumber);
+        this.setFramesNumber(this.framesNumber);
         this.goTo(0);
 
         if( ops.tags ) {
@@ -61,13 +62,14 @@
     Timeline.prototype.getTags = function(){
         return this.tags;
     };
-    Timeline.prototype.resetFrames = function(framesNumber){
+    Timeline.prototype.setFramesNumber = function(num){
+        this.framesNumber = num;
         this.cont.find('.frame').remove();
-        if( ! framesNumber ) return;
+        if( ! num ) return;
 
         var pxSec    = this['px/sec'],
             frames   = this.cont.find('.frames'),
-            secFrame = this.duration / (framesNumber - 1);
+            secFrame = this.duration / (num - 1);
 
         secFrame = secFrame - secFrame % 5;
 
@@ -106,6 +108,7 @@
         this.length = 1;
         this.line   = null;
         this['px/sec'] = ops['px/sec'];
+        this.draggable = typeof ops.draggable !== 'undefined' ? ops.draggable : true;
 
         var root = $(ops.tpl);
         this.getRootNode = function(){
@@ -127,7 +130,7 @@
 
         this.setLine(this.getFreeLine());
 
-        if( ! this.getRootNode().data('initDnD') ) {
+        if( this.draggable && ! this.getRootNode().data('initDnD') ) {
             this.getRootNode()
                 .draggable({
                     containment: '.tags-lines',

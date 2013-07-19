@@ -41,14 +41,23 @@ $('.timeline').timeline('goTo', 75);
 
 ### Methods
 
+* getRootNode() - Return root element
 * goToNextSecond() - Move pointer on one second forvard
 * goToPrevSecond() - Move pointer on one second backvard
 * goTo(seconds) - Move pointer to exac position on timeline
 * addTag(options) - Add tag to timeline
 * getTags() - Return array of objects of TimelineTag class
-* getRootNode() - Return root element
+* setFramesNumber(int) - set number of frames
+* formatTime(int) - function which converts seconds to format "mm:ss", you can overwrite this function to change frames time format
 
 All methods except getters will returns timeline itself.
+
+### Properties
+
+* tagTpl - jQuery object used as template for new tags
+* frameTpl - jQuery object used as template for frames
+* pointer - jQuery object of current second pointer
+* currentSecond - number of current position of pointer in seconds
 
 ## TimelineTag class
 
