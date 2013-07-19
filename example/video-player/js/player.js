@@ -1,6 +1,6 @@
 jQuery(function($){
 
-    window.timeline = new Timeline('.timeline', {
+    var timeline = new Timeline('.timeline', {
         width: 600 - 18 * 2,
         duration: 46.54,
         framesNumber: 10
@@ -18,7 +18,7 @@ jQuery(function($){
             preload: "auto"
         }
     ).ready(function(){
-            window.player = this;
+            var player = this;
 
             player.src({type: 'video/mp4', src: 'http://video-js.zencoder.com/oceans-clip.mp4'});
 
