@@ -66,6 +66,7 @@ All methods except getters will returns timeline itself.
 * title - Title of tag
 * start - Start time in seconds. Default to 0
 * length - Length in seconds
+* draggable - Boolean, default to true, shows can tag to be draggable and resizable or not
 
 ### Methods
 
