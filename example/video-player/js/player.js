@@ -33,13 +33,11 @@ jQuery(function($){
     });
 
     $('.sidebar form').submit(function(){
-        var tag = {
+        timeline.addTag({
             title:  buttons.filter('.active').html(),
             start:  this['start'].value,
             length: this['length'].value
-        };
-
-        timeline.addTag(tag);
+        });
 
         return false;
     });
