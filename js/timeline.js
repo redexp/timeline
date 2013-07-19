@@ -12,6 +12,7 @@
         this.tagTpl    = root.find('.tag').detach();
         this.frameTpl  = root.find('.frame').detach();
         this.pointer   = root.find('.pointer');
+        this.currentSecond = 1;
 
         root.css('width', ops.width + 'px');
 
@@ -29,16 +30,19 @@
     Timeline.prototype.getRootNode = function(){
         return this.cont;
     };
+    Timeline.prototype.goTo = function(sec){
+        if( this.currentSecond != sec ) {
+            this.pointer.css('left', sec * this['px/sec'] + 'px');
+            this.currentSecond = sec;
+        }
+        return this;
+    };
     Timeline.prototype.goToNextSecond = function(){
-        this.pointer.css('left', '+=' + this['px/sec']);
+        this.goTo(this.currentSecond + 1);
         return this;
     };
     Timeline.prototype.goToPrevSecond = function(){
-        this.pointer.css('left', '-=' + this['px/sec']);
-        return this;
-    };
-    Timeline.prototype.goTo = function(sec){
-        this.pointer.css('left', sec * this['px/sec'] + 'px');
+        this.goTo(this.currentSecond - 1);
         return this;
     };
     Timeline.prototype.addTag = function(tag){
