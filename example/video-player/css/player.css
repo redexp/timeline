@@ -1,0 +1,13 @@
+.player {
+  float: left;
+  overflow: hidden; }
+  .player .video-player {
+    width: 600px;
+    height: 400px; }
+
+.sidebar {
+  float: left;
+  width: 430px;
+  overflow: hidden; }
+  .sidebar .tag-buttons {
+    padding: 10px; }
