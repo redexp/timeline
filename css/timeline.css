@@ -56,7 +56,7 @@
       z-index: 1000; }
       .timeline .frames .pointer .line {
         left: 0;
-        margin-left: 0;
+        margin-left: 17px;
         background-color: red; }
   .timeline .tags-lines li {
     position: relative;
