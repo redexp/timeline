@@ -10,6 +10,13 @@
   top: 0px;
   width: 7px; }
 
+.ui-resizable-w {
+  cursor: w-resize;
+  height: 100%;
+  left: -5px;
+  top: 0px;
+  width: 7px; }
+
 .timeline {
   background-color: #1b1b1b;
   width: 600px;
@@ -45,8 +52,11 @@
         text-align: center;
         font-size: 12px; }
     .timeline .frames .pointer {
+      width: 1px;
       z-index: 1000; }
       .timeline .frames .pointer .line {
+        left: 0;
+        margin-left: 0;
         background-color: red; }
   .timeline .tags-lines li {
     position: relative;

@@ -8,10 +8,12 @@
         this.cont      = root;
         this.duration  = ops.duration;
         this['px/sec'] = ops.width / ops.duration;
+        this.align     = ops.hasOwnProperty('align') ? ops.align : true;
         this.tags      = [];
         this.tagTpl    = root.find('.tag').detach();
         this.frameTpl  = root.find('.frame').detach();
         this.pointer   = root.find('.pointer');
+        this.tagsLines = root.find('.tags-lines');
         this.currentSecond = 1;
         this.framesNumber  = ops.framesNumber || 0;
 
@@ -47,13 +49,9 @@
         return this;
     };
     Timeline.prototype.addTag = function(tag){
-        if( tag instanceof TimelineTag == false ) {
-            tag['px/sec'] = this['px/sec'];
-            tag.tpl = this.tagTpl.clone();
-            tag = new TimelineTag(tag);
-        }
-
-        tag.addTo(this);
+        tag.timeline = this;
+        tag.tpl      = this.tagTpl.clone();
+        tag = new TimelineTag(tag);
 
         this.tags.push(tag);
 
@@ -99,39 +97,50 @@
             $s = seconds % 60;
         return pad($m, 2) + ':' + pad($s, 2);
     };
+    Timeline.prototype.toJSON = function(){
+        var timeline = {
+            duration:      this.duration,
+            currentSecond: this.currentSecond,
+            tags:          []
+        };
+
+        for(var i = 0; i < this.tags.length; i++) {
+            timeline.tags.push({
+                title:  this.tags[i].title,
+                start:  this.tags[i].start,
+                length: this.tags[i].length,
+                line:   this.tags[i].line
+            });
+        }
+
+        return timeline;
+    };
 
     //====================== TimelineTag class =============================
 
-    window.TimelineTag = function(ops){
+    var TimelineTag = function(ops){
         this.title  = '';
         this.start  = 0;
         this.length = 1;
         this.line   = null;
-        this['px/sec'] = ops['px/sec'];
-        this.draggable = typeof ops.draggable !== 'undefined' ? ops.draggable : true;
+        this.draggable = ops.hasOwnProperty('draggable') ? ops.draggable : true;
+        this.timeline  = ops.timeline;
+        this.data      = ops.data;
 
         var root = $(ops.tpl);
         this.getRootNode = function(){
             return root;
         };
 
-        root.data('tag', this);
-
         this
             .setTitle(ops.title)
             .setStart(ops.start   || this.start)
             .setLength(ops.length || this.length)
+            .setLine(ops.hasOwnProperty('line') ? ops.line : this.getFreeLine())
         ;
-    };
-    TimelineTag.prototype.addTo = function(timeline){
-        this.getRootNode().appendTo(
-            timeline.cont.find('.tags-lines li').first()
-        );
 
-        this.setLine(this.getFreeLine());
-
-        if( this.draggable && ! this.getRootNode().data('initDnD') ) {
-            this.getRootNode()
+        if( this.draggable ) {
+            root
                 .draggable({
                     containment: '.tags-lines',
                     axis:        "x",
@@ -142,33 +151,32 @@
                 })
                 .resizable({
                     containment: '.tags-lines',
-                    handles:     "e",
+                    handles:     "w, e",
                     start:       onStart,
                     resize:      onDrag,
                     stop:        onStop
                 })
             ;
-            this.getRootNode().data('initDnD', true);
         }
+
+        root.data('tag', this);
     };
     TimelineTag.prototype.setTitle = function(title){
         this.getRootNode().find('.title').html(this.title = title);
         return this;
     };
     TimelineTag.prototype.setStart = function(start){
-        this.getRootNode().css('left', (this.start = start) * this['px/sec'] + 'px');
-        this.setLine(this.getFreeLine());
+        this.getRootNode().css('left', (this.start = start) * this.timeline['px/sec'] + 'px');
         return this;
     };
     TimelineTag.prototype.setLength = function(length){
-        this.getRootNode().css('width', (this.length = length) * this['px/sec'] + 'px');
-        this.setLine(this.getFreeLine());
+        this.getRootNode().css('width', (this.length = length) * this.timeline['px/sec'] + 'px');
         return this;
     };
     TimelineTag.prototype.setLine = function(line){
         if( this.line === line ) return this;
 
-        var lines = this.getRootNode().closest('.tags-lines');
+        var lines = this.timeline.tagsLines;
 
         for(var i = lines.find('li').length; i <= line; i++) {
             lines.append('<li>');
@@ -179,52 +187,27 @@
         return this;
     };
     TimelineTag.prototype.getFreeLine = function(){
-        var lines = this.getRootNode().closest('.tags-lines');
+        var lines = this.timeline.tagsLines;
 
         return getTagFreeLine(this.getRootNode(), lines.find('.tag'));
     };
 
-    //====================== jQuery plugin =================================
-
-    $.fn.timeline = function(ops){
-        if( typeof ops === 'string' ) {
-            var args = Array.prototype.slice.call(arguments, 1);
-
-            if( ops.substr(0, 3) === 'get' ) {
-                var timeline = this.data('timeline');
-                return timeline[ops].apply(timeline, args);
-            }
-
-            return this.each(function(){
-                var timeline = $(this).data('timeline');
-                timeline[ops].apply(timeline, args);
-            });
-        }
-
-        ops = $.extend({
-            width: 600,
-            duration: 1,
-            framesNumber: 0
-        }, ops || {});
-
-        return this.each(function(){
-            new Timeline(this, ops);
-        });
-    };
-
     //====================== Helpers =======================================
 
-    var helper, helperLine, curTag, tagsList, tagsLines, linesCount, fakeLine;
+    var helper, helperLine, curTag, $curTag, tagsList, tagsLines, linesCount, fakeLine;
 
     function onStart(e, ui){
-        curTag = ui.helper;
+        $curTag = ui.helper;
+        curTag  = $curTag.data('tag');
 
-        helper = curTag.clone()
-            .appendTo(curTag.closest('.tags-lines').find('li').first())
+        if( curTag.timeline.align === false ) return;
+
+        helper = $curTag.clone()
+            .appendTo(curTag.timeline.tagsLines.children().first())
             .addClass('helper')
         ;
 
-        tagsLines  = curTag.closest('.tags-lines');
+        tagsLines  = curTag.timeline.tagsLines;
         tagsList   = tagsLines.find('.tag').not(helper);
         linesCount = tagsLines.find('li').length - 1;
         helperLine = 0;
@@ -232,18 +215,19 @@
     }
 
     function onDrag(){
-        var tag = curTag.data('tag');
-        tag.start  = parseInt(curTag.css('left'))  / tag['px/sec'];
-        tag.length = parseInt(curTag.css('width')) / tag['px/sec'];
+        curTag.start  = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'];
+        curTag.length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
 
-        helperLine = getTagFreeLine(curTag, tagsList);
+        if( curTag.timeline.align === false ) return;
 
-        if( helperLine == curTag.data('tag').line ) {
+        helperLine = getTagFreeLine($curTag, tagsList);
+
+        if( helperLine == $curTag.data('tag').line ) {
             helper.hide();
         }
         else {
             helper
-                .css(curTag.css(['left', 'width']))
+                .css($curTag.css(['left', 'width']))
                 .css('top', 30 * helperLine + 'px')
                 .show()
             ;
@@ -260,11 +244,13 @@
     }
 
     function onStop(){
-        curTag.data('tag').setLine(helperLine);
+        if( curTag.timeline.align === false ) return;
+
+        curTag.setLine(helperLine);
 
         helper.remove();
 
-        tagsLines.find('li').not(':first').find('.tag').not(curTag).each(function(){
+        tagsLines.find('li').not(':first').find('.tag').not($curTag).each(function(){
             var $this = $(this);
             $this.data('tag').setLine( getTagFreeLine($this, tagsList) );
         });

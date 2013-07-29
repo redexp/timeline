@@ -16,31 +16,22 @@
                 duration: 60 * 2 + 25,
                 framesNumber: 12,
                 width: 600,
+                align: false,
                 tags: [
                     {title: 'One', length: 15},
                     {title: 'Two', start: 30, length: 15},
                     {title: 'Three', start: 5, length: 20},
-                    {title: 'Four', start: 40, length: 20}
+                    {title: 'Four', start: 40, length: 20, line: 6}
                 ]
             };
 
-            // native style
             var timeline = new Timeline('#test1', options);
             timeline.goToNextSecond();
             timeline.goToPrevSecond();
             timeline.goTo(72);
             timeline.addTag({title: 'Five', start: 80, length: 20});
             timeline.addTag({title: 'Six', length: 20});
-            console.log(JSON.stringify(timeline.getTags()));
-
-            // jQuery style
-            var $timeline = $('#test2').timeline(options);
-            $timeline.timeline('goToNextSecond');
-            $timeline.timeline('goToPrevSecond');
-            $timeline.timeline('goTo', 72);
-            $timeline.timeline('addTag', {title: 'Five', start: 80, length: 20});
-            $timeline.timeline('addTag', {title: 'Six', length: 20});
-            console.log(JSON.stringify($timeline.timeline('getTags')));
+            console.log(JSON.stringify(timeline.toJSON()));
         });
     </script>
 
@@ -48,27 +39,6 @@
 <body>
 
 <div id="test1" class="timeline">
-    <ul class="frames">
-        <li class="pointer">
-            <div class="line"></div>
-        </li>
-        <li class="frame">
-            <div class="line"></div>
-            <div class="time"></div>
-        </li>
-    </ul>
-    <ul class="tags-lines">
-        <li>
-            <div class="tag">
-                <span class="title"></span>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<br/>
-
-<div id="test2" class="timeline">
     <ul class="frames">
         <li class="pointer">
             <div class="line"></div>
