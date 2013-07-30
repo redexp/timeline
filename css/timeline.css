@@ -51,6 +51,9 @@
         width: 100%;
         text-align: center;
         font-size: 12px; }
+      .timeline .frames li.quoter {
+        top: auto;
+        height: 20px; }
     .timeline .frames .pointer {
       width: 1px;
       z-index: 1000; }

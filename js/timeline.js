@@ -9,9 +9,9 @@
         this.duration  = ops.duration;
         this['px/sec'] = ops.width / ops.duration;
         this.align     = ops.hasOwnProperty('align') ? ops.align : true;
+        this.framesOrder = ops.hasOwnProperty('framesOrder') ? ops.framesOrder : ['.frame'];
         this.tags      = [];
         this.tagTpl    = root.find('.tag').detach();
-        this.frameTpl  = root.find('.frame').detach();
         this.pointer   = root.find('.pointer');
         this.tagsLines = root.find('.tags-lines');
         this.currentSecond = 1;
@@ -19,11 +19,21 @@
 
         root.css('width', ops.width + 'px');
 
+        this.framesTpl = {};
+
+        var i, name;
+        for(i = 0; i < this.framesOrder.length; i++) {
+            name = this.framesOrder[i];
+            if( this.framesTpl.hasOwnProperty(name) ) continue;
+
+            this.framesTpl[name] = root.find('.frames ' + name).detach();
+        }
+
         this.setFramesNumber(this.framesNumber);
         this.goTo(0);
 
         if( ops.tags ) {
-            for(var i = 0; i < ops.tags.length; i++) {
+            for(i = 0; i < ops.tags.length; i++) {
                 this.addTag(ops.tags[i]);
             }
         }
@@ -71,18 +81,11 @@
 
         secFrame = secFrame - secFrame % 5;
 
-        for(var i = 0; i <= this.duration; i += secFrame) {
-            this.frameTpl.clone()
+        for(var i = 0, n = 1; i <= this.duration; i += secFrame, n = n % this.framesOrder.length + 1) {
+            this.framesTpl[this.framesOrder[n - 1]].clone()
                 .appendTo(frames)
                 .css('left', i * pxSec + 'px')
                 .find('.time').html(this.formatTime(i))
-            ;
-        }
-
-        if( this.duration % secFrame > 0 ) {
-            this.frameTpl.clone()
-                .appendTo(frames)
-                .css('left', this.duration * pxSec + 'px')
             ;
         }
     };

@@ -11,11 +11,11 @@
     <script type="text/javascript" src="../../js/timeline.js"></script>
 
     <script type="text/javascript">
-        jQuery(function($){
+        jQuery(function(){
             var options = {
+                width: 600,
                 duration: 60 * 2 + 25,
                 framesNumber: 12,
-                width: 600,
                 tags: [
                     {title: 'One', length: 15},
                     {title: 'Two', start: 30, length: 15},
@@ -34,6 +34,7 @@
 
             options.align = false;
             options.tags[3].line = 6;
+            options.framesOrder = ['.main', '.quoter', '.half', '.quoter'];
             new Timeline('#test2', options);
         });
     </script>
@@ -67,9 +68,15 @@
         <li class="pointer">
             <div class="line"></div>
         </li>
-        <li class="frame">
+        <li class="frame main">
             <div class="line"></div>
             <div class="time"></div>
+        </li>
+        <li class="frame half">
+            <div class="line"></div>
+        </li>
+        <li class="frame quoter">
+            <div class="line"></div>
         </li>
     </ul>
     <ul class="tags-lines">
