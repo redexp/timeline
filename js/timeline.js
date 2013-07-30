@@ -126,7 +126,7 @@
         this.start  = 0;
         this.length = 1;
         this.line   = null;
-        this.draggable = ops.hasOwnProperty('draggable') ? ops.draggable : true;
+        this.disabled = ops.hasOwnProperty('disabled') ? ops.disabled : false;
         this.timeline  = ops.timeline;
         this.data      = ops.data;
 
@@ -142,7 +142,7 @@
             .setLine(ops.hasOwnProperty('line') ? ops.line : this.getFreeLine())
         ;
 
-        if( this.draggable ) {
+        if( this.disabled === false ) {
             root
                 .draggable({
                     containment: '.tags-lines',
