@@ -11,11 +11,11 @@
     <script type="text/javascript" src="../../js/timeline.js"></script>
 
     <script type="text/javascript">
-        jQuery(function($){
+        jQuery(function(){
             var options = {
+                width: 600,
                 duration: 60 * 2 + 25,
                 framesNumber: 12,
-                width: 600,
                 tags: [
                     {title: 'One', length: 15},
                     {title: 'Two', start: 30, length: 15},
@@ -24,23 +24,18 @@
                 ]
             };
 
-            // native style
             var timeline = new Timeline('#test1', options);
             timeline.goToNextSecond();
             timeline.goToPrevSecond();
             timeline.goTo(72);
             timeline.addTag({title: 'Five', start: 80, length: 20});
             timeline.addTag({title: 'Six', length: 20});
-            console.log(JSON.stringify(timeline.getTags()));
+            console.log(JSON.stringify(timeline.toJSON()));
 
-            // jQuery style
-            var $timeline = $('#test2').timeline(options);
-            $timeline.timeline('goToNextSecond');
-            $timeline.timeline('goToPrevSecond');
-            $timeline.timeline('goTo', 72);
-            $timeline.timeline('addTag', {title: 'Five', start: 80, length: 20});
-            $timeline.timeline('addTag', {title: 'Six', length: 20});
-            console.log(JSON.stringify($timeline.timeline('getTags')));
+            options.align = false;
+            options.tags[3].line = 6;
+            options.framesOrder = ['.main', '.quoter', '.half', '.quoter'];
+            new Timeline('#test2', options);
         });
     </script>
 
@@ -73,9 +68,15 @@
         <li class="pointer">
             <div class="line"></div>
         </li>
-        <li class="frame">
+        <li class="frame main">
             <div class="line"></div>
             <div class="time"></div>
+        </li>
+        <li class="frame half">
+            <div class="line"></div>
+        </li>
+        <li class="frame quoter">
+            <div class="line"></div>
         </li>
     </ul>
     <ul class="tags-lines">

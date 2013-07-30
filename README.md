@@ -12,43 +12,40 @@ timeline component with tags for video players
 
 Full example you can find in [example/index.html](example/index.html)
 
-You can init timeline with native style like
+Init timeline
 ```javascript
 var timeline = new Timeline('#timeline', options);
-```
-or jQuery style
-```javascript
-$('.timeline').timeline(options);
-```
-Difference that with native style you can initialize only one time line, when with jQuery style you can setup all selected timelines.
-Also another difference that with native tyle it's very easy to call Timeline methods
-```javascript
-timeline.goTo(75);
-```
-when with jQuery style you need to do that like this
-```javascript
-$('.timeline').timeline('goTo', 75);
 ```
 
 ## Timeline class
 
 ### Options
 
+* width - Width of timeline
 * duration - Length of video in seconds
 * framesNumber - Number of frames
-* width - Width of timeline
+* framesOrder - Array of frames classes names
+* align - Boolean, should tags align to top or not
 * tags - Array of TimelineTag class options
 
 ### Methods
 
+* getRootNode() - Return root element
 * goToNextSecond() - Move pointer on one second forvard
 * goToPrevSecond() - Move pointer on one second backvard
 * goTo(seconds) - Move pointer to exac position on timeline
 * addTag(options) - Add tag to timeline
 * getTags() - Return array of objects of TimelineTag class
-* getRootNode() - Return root element
+* setFramesNumber(int) - set number of frames
+* formatTime(int) - function which converts seconds to format "mm:ss", you can overwrite this function to change frames time format
+* toJSON() - returns copy of timeline object cleared from internal fields
 
 All methods except getters will returns timeline itself.
+
+### Properties
+
+* pointer - jQuery object of current second pointer
+* currentSecond - number of current position of pointer in seconds
 
 ## TimelineTag class
 
@@ -57,6 +54,8 @@ All methods except getters will returns timeline itself.
 * title - Title of tag
 * start - Start time in seconds. Default to 0
 * length - Length in seconds
+* line - Number of line
+* draggable - Boolean, default to true, shows can tag to be draggable and resizable or not
 
 ### Methods
 
