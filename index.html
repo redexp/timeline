@@ -22,7 +22,7 @@
         jQuery(function($){
             $('#main_content').headsmart();
 
-            $('#timeline').timeline({
+            var timeline = new Timeline('#timeline', {
                 duration: 60 * 2 + 25,
                 framesNumber: 10,
                 width: 470,
@@ -32,7 +32,25 @@
                     {title: 'Three', start: 35, length: 20},
                     {title: 'Four', start: 40, length: 50}
                 ]
-            }).timeline('goTo', 78);
+            });
+
+            timeline.goTo(78);
+
+            timeline = new Timeline('#timeline2', {
+                duration: 60 * 2 + 25,
+                framesNumber: 15,
+                framesOrder: ['.main', '.half'],
+                width: 470,
+                align: false,
+                tags: [
+                    {title: 'One', line: 1, length: 15, disabled: true},
+                    {title: 'Two', start: 30, length: 15},
+                    {title: 'Three', line: 3, start: 35, length: 20},
+                    {title: 'Four', line: 3, start: 65, length: 15}
+                ]
+            });
+
+            timeline.goTo(78);
         })
     </script>
     <title>Timeline by redexp</title>
@@ -67,24 +85,25 @@
 
     <section id="main_content">
         <h3>
-            <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span
-                    class="octicon octicon-link"></span></a>Small demo</h3>
+            <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages">
+                <span class="octicon octicon-link"></span>
+            </a>Small demo</h3>
+
+        <p>You can drag'n'drop and resize the tags</p>
 
 <pre><code>
-    $('#timeline').timeline({
+    var timeline = new Timeline('#timeline', {
+        width: 470,
         duration: 60 * 2 + 25,
         framesNumber: 10,
-        width: 470,
         tags: [
             {title: 'One', length: 15},
             {title: 'Two', start: 30, length: 15},
             {title: 'Three', start: 35, length: 20},
             {title: 'Four', start: 40, length: 50}
         ]
-    })
+    });
 </code></pre>
-
-        <p>You can drag'n'drop and resize the tags</p>
 
         <div id="timeline" class="timeline">
             <ul class="frames">
@@ -94,6 +113,46 @@
                 <li class="frame">
                     <div class="line"></div>
                     <div class="time"></div>
+                </li>
+            </ul>
+            <ul class="tags-lines">
+                <li>
+                    <div class="tag">
+                        <span class="title"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <p>With custom frames order and without align to top and disabled tag "One"</p>
+
+<pre><code>
+    var timeline = new Timeline('#timeline2', {
+        width: 470,
+        duration: 60 * 2 + 25,
+        framesNumber: 15,
+        framesOrder: ['.main', '.half'],
+        align: false,
+        tags: [
+            {title: 'One', line: 1, length: 15, disabled: true},
+            {title: 'Two', start: 30, length: 15},
+            {title: 'Three', line: 3, start: 35, length: 20},
+            {title: 'Four', line: 3, start: 65, length: 15}
+        ]
+    });
+</code></pre>
+
+        <div id="timeline2" class="timeline">
+            <ul class="frames">
+                <li class="pointer">
+                    <div class="line"></div>
+                </li>
+                <li class="frame main">
+                    <div class="line"></div>
+                    <div class="time"></div>
+                </li>
+                <li class="frame half">
+                    <div class="line"></div>
                 </li>
             </ul>
             <ul class="tags-lines">
