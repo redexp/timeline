@@ -51,6 +51,9 @@
         width: 100%;
         text-align: center;
         font-size: 12px; }
+      .timeline .frames li.half .line {
+        background-color: transparent;
+        border-left: 1px dashed #dddddd; }
       .timeline .frames li.quoter {
         top: auto;
         height: 20px; }
