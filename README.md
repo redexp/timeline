@@ -10,7 +10,7 @@ timeline component with tags for video players
 
 ## Usage
 
-Full example you can find in [example/index.html](example/index.html)
+Full example you can find in [example/index.html](example/simple/index.html)
 
 Init timeline
 ```javascript
