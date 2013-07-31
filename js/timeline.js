@@ -130,10 +130,7 @@
         this.timeline  = ops.timeline;
         this.data      = ops.data;
 
-        var root = $(ops.tpl);
-        this.getRootNode = function(){
-            return root;
-        };
+        this.rootNode = $(ops.tpl);
 
         this
             .setTitle(ops.title)
@@ -143,7 +140,7 @@
         ;
 
         if( this.disabled === false ) {
-            root
+            this.rootNode
                 .draggable({
                     containment: '.tags-lines',
                     axis:        "x",
@@ -162,18 +159,40 @@
             ;
         }
 
-        root.data('tag', this);
+        if( ops.hasOwnProperty('events') ) {
+            for(var event in ops.events) {
+                if( ! ops.events.hasOwnProperty(event) ) continue;
+
+                this.on(event, ops.events[event]);
+            }
+        }
+
+        this.rootNode.data('tag', this);
+    };
+    TimelineTag.prototype.on = function(event, callback){
+        var tag = this;
+        this.rootNode.on(event, function(){
+            callback.apply(tag, Array.prototype.slice.call(arguments));
+        });
+        return this;
+    };
+    TimelineTag.prototype.trigger = function(event, args){
+        this.rootNode.trigger(event, args);
+        return this;
     };
     TimelineTag.prototype.setTitle = function(title){
-        this.getRootNode().find('.title').html(this.title = title);
+        this.rootNode.find('.title').html(this.title = title);
+        this.trigger('setTitle', [title]);
         return this;
     };
     TimelineTag.prototype.setStart = function(start){
-        this.getRootNode().css('left', (this.start = start) * this.timeline['px/sec'] + 'px');
+        this.rootNode.css('left', (this.start = start) * this.timeline['px/sec'] + 'px');
+        this.trigger('setStart', [start]);
         return this;
     };
     TimelineTag.prototype.setLength = function(length){
-        this.getRootNode().css('width', (this.length = length) * this.timeline['px/sec'] + 'px');
+        this.rootNode.css('width', (this.length = length) * this.timeline['px/sec'] + 'px');
+        this.trigger('setLength', [length]);
         return this;
     };
     TimelineTag.prototype.setLine = function(line){
@@ -185,14 +204,16 @@
             lines.append('<li>');
         }
 
-        this.getRootNode().appendTo( lines.find('li').eq(this.line = line) );
+        this.rootNode.appendTo( lines.find('li').eq(this.line = line) );
+
+        this.trigger('setLine', [line]);
 
         return this;
     };
     TimelineTag.prototype.getFreeLine = function(){
         var lines = this.timeline.tagsLines;
 
-        return getTagFreeLine(this.getRootNode(), lines.find('.tag'));
+        return getTagFreeLine(this.rootNode, lines.find('.tag'));
     };
 
     //====================== Helpers =======================================
@@ -220,6 +241,9 @@
     function onDrag(){
         curTag.start  = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'];
         curTag.length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
+
+        curTag.trigger('setStart', [curTag.start]);
+        curTag.trigger('setLength', [curTag.length]);
 
         if( curTag.timeline.align === false ) return;
 

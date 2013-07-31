@@ -35,8 +35,13 @@
             // Second example
 
             options.align = false;
-            options.tags[3].line = 6;
             options.framesOrder = ['.main', '.quoter', '.half', '.quoter'];
+            options.tags[3].line = 6;
+            options.tags[3].events = {
+                'setStart': function(event, start){
+                    console.log(start + ' or ' + this.start);
+                }
+            };
             new Timeline('#test2', options);
         });
     </script>

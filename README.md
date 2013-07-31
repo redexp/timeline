@@ -56,6 +56,7 @@ All methods except getters will returns timeline itself.
 * length - Length in seconds
 * line - Number of line
 * draggable - Boolean, default to true, shows can tag to be draggable and resizable or not
+* events - Hash of events names and their callbacks
 
 ### Methods
 
@@ -64,6 +65,26 @@ All methods except getters will returns timeline itself.
 * setLength(int) - set length of tag in seconds
 * setLine(int) - set tag on line in timeline
 * getFreeLine() - get free line for this tag on timeline
+* on(event, callback) - bind callback to event of tag
+* trigger(event, arguments) - trigger event of tag with optional arguments in array
+
+### Properties
+
+* rootNode - jQuery object of tag
+* title - Title of tag
+* start - Start time in seconds. Default to 0
+* length - Length in seconds
+* line - Number of line
+
+### Events
+
+Scope (this keyword) in callback will be tag itself.
+First parameter of all callback will be event object
+
+* setTitle
+* setStart
+* setLength
+* setLine
 
 ## Templating
 
