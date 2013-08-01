@@ -151,7 +151,7 @@
         if( this.disabled === false ) {
             this.rootNode
                 .draggable({
-                    containment: '.tags-lines',
+                    containment: 'parent',
                     axis:        "x",
                     zIndex:      1000,
                     start:       onStart,
@@ -159,7 +159,7 @@
                     stop:        onStop
                 })
                 .resizable({
-                    containment: '.tags-lines',
+                    containment: 'parent',
                     handles:     "w, e",
                     start:       onStart,
                     resize:      onDrag,
