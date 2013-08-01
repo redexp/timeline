@@ -224,7 +224,8 @@
 
         return getTagFreeLine(this.rootNode, lines.find('.tag'));
     };
-    TimelineTag.prototype.remove = function(length){
+    TimelineTag.prototype.remove = function(){
+        this.trigger('remove');
         this.rootNode.remove();
         this.timeline.tags.splice(this.timeline.tags.indexOf(this), 1);
         this.timeline.removeEmptyLines();
