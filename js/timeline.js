@@ -254,11 +254,11 @@
     }
 
     function onDrag(){
-        curTag.start  = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'];
-        curTag.length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
+        var start = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'],
+            length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
 
-        curTag.trigger('setStart', [curTag.start]);
-        curTag.trigger('setLength', [curTag.length]);
+        if( start  != curTag.start )  curTag.trigger('setStart', [curTag.start = start]);
+        if( length != curTag.length ) curTag.trigger('setLength', [curTag.length = length]);
 
         if( curTag.timeline.align === false ) return;
 
