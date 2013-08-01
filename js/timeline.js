@@ -118,6 +118,15 @@
 
         return timeline;
     };
+    Timeline.prototype.removeEmptyLines = function(){
+        this.tagsLines.children().each(function(){
+            var li = $(this);
+            if( li.children().length === 0 ) {
+                li.remove();
+            }
+        });
+        return this;
+    };
 
     //====================== TimelineTag class =============================
 
@@ -214,6 +223,11 @@
         var lines = this.timeline.tagsLines;
 
         return getTagFreeLine(this.rootNode, lines.find('.tag'));
+    };
+    TimelineTag.prototype.remove = function(length){
+        this.rootNode.remove();
+        this.timeline.tags.splice(this.timeline.tags.indexOf(this), 1);
+        this.timeline.removeEmptyLines();
     };
 
     //====================== Helpers =======================================
