@@ -65,7 +65,7 @@
 
         this.tags.push(tag);
 
-        return this;
+        return tag;
     };
     Timeline.prototype.getTags = function(){
         return this.tags;
