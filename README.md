@@ -67,6 +67,7 @@ All methods except getters will returns timeline itself.
 * getFreeLine() - get free line for this tag on timeline
 * on(event, callback) - bind callback to event of tag
 * trigger(event, arguments) - trigger event of tag with optional arguments in array
+* remove() - remove tag from timeline
 
 ### Properties
 
@@ -85,6 +86,7 @@ First parameter of all callback will be event object
 * setStart
 * setLength
 * setLine
+* remove
 
 ## Templating
 

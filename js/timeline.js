@@ -65,7 +65,7 @@
 
         this.tags.push(tag);
 
-        return this;
+        return tag;
     };
     Timeline.prototype.getTags = function(){
         return this.tags;
@@ -118,6 +118,15 @@
 
         return timeline;
     };
+    Timeline.prototype.removeEmptyLines = function(){
+        this.tagsLines.children().each(function(){
+            var li = $(this);
+            if( li.children().length === 0 ) {
+                li.remove();
+            }
+        });
+        return this;
+    };
 
     //====================== TimelineTag class =============================
 
@@ -142,7 +151,7 @@
         if( this.disabled === false ) {
             this.rootNode
                 .draggable({
-                    containment: '.tags-lines',
+                    containment: 'parent',
                     axis:        "x",
                     zIndex:      1000,
                     start:       onStart,
@@ -150,7 +159,7 @@
                     stop:        onStop
                 })
                 .resizable({
-                    containment: '.tags-lines',
+                    containment: 'parent',
                     handles:     "w, e",
                     start:       onStart,
                     resize:      onDrag,
@@ -215,6 +224,12 @@
 
         return getTagFreeLine(this.rootNode, lines.find('.tag'));
     };
+    TimelineTag.prototype.remove = function(){
+        this.trigger('remove');
+        this.rootNode.remove();
+        this.timeline.tags.splice(this.timeline.tags.indexOf(this), 1);
+        this.timeline.removeEmptyLines();
+    };
 
     //====================== Helpers =======================================
 
@@ -239,11 +254,11 @@
     }
 
     function onDrag(){
-        curTag.start  = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'];
-        curTag.length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
+        var start = parseInt($curTag.css('left'))  / curTag.timeline['px/sec'],
+            length = parseInt($curTag.css('width')) / curTag.timeline['px/sec'];
 
-        curTag.trigger('setStart', [curTag.start]);
-        curTag.trigger('setLength', [curTag.length]);
+        if( start  != curTag.start )  curTag.trigger('setStart', [curTag.start = start]);
+        if( length != curTag.length ) curTag.trigger('setLength', [curTag.length = length]);
 
         if( curTag.timeline.align === false ) return;
 
